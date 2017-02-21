@@ -1,0 +1,30 @@
+{
+  "author" : "Marco",
+  "commands" : [
+    {
+      "script" : "script.cocoascript",
+      "name" : "Export  Current Page as PNGs",
+      "handler" : "onCurrentPageToPNGs",
+      "identifier" : "com.mountainlion.sketch.current"
+    },
+    {
+      "script" : "script.cocoascript",
+      "name" : "Export  All Pages as PNGs",
+      "handler" : "onAllPagesToPNGs",
+      "identifier" : "com.mountainlion.sketch.all"
+    }
+  ],
+  "menu" : {
+    "items" : [
+      "com.mountainlion.sketch.current",
+      "com.mountainlion.sketch.all"
+    ],
+    "isRoot" : true,
+    "title" : "Export Page as PNGs"
+  },
+  "identifier" : "com.mountainlion.sketch.1d666e81-a776-4255-959f-b2a5f608ea79",
+  "version" : "1.0",
+  "description" : "",
+  "authorEmail" : "",
+  "name" : "Export Page as PNGs"
+}

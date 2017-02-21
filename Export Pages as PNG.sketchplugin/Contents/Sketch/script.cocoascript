@@ -1,0 +1,87 @@
+var onCurrentPageToPNGs = function(context){
+
+       //var sketch = context.api()
+    //var document = sketch.frontDocument;
+    //var page = document.selectedPage;
+
+    var app = NSApplication.sharedApplication();
+    var doc = context.document;
+    var page = doc.currentPage();
+
+    var savePath = chooseDirectory();
+
+    doc.showMessage("Welcome to use this script!");
+
+    if ( page ){
+        getSelectedPage(context,savePath);
+        doc.showMessage("Success!");
+    } else {
+        app.displayDialog_withTitle_("Error","Please select one page!");
+    }
+}
+
+function getSelectedPage(context,savePath){
+
+    var doc = context.document;
+    var page = doc.currentPage();
+
+    var artboards       = page.artboards(),
+        artboardsCount  = artboards.count();
+
+    if (artboardsCount >= 1){
+        for (i = 0; i < artboardsCount; ++i) {
+            var artboard = artboards[i];
+
+            if ( isArtboard(artboard) ){
+                var path = savePath + "/" + page.name() + "/"+ artboard.nodeName() + ".png";
+                [doc saveArtboardOrSlice:artboard toFile:path];
+            } else {
+                doc.showMessage("You can't export floating layers, only artboards will be exported.");
+            }
+        }
+    }
+}
+
+var onAllPagesToPNGs = function(context){
+
+    var doc = context.document;
+    var savePath = chooseDirectory();
+    doc.showMessage("Welcome to use this script!");
+
+    /*
+     * Set up initial variables
+     */
+    var pages       = doc.pages(),
+        pageCount   = pages.count();
+
+
+    for (index = 0; index < pageCount; ++index) {
+        var page = pages[index];
+
+        /*
+         * We have to set the current page of the document otherwise the png for the artboard will export empty
+         */
+        doc.setCurrentPage(page);
+        getSelectedPage(context,savePath);
+    }
+
+    doc.showMessage("Success!");
+}
+
+function isArtboard(arboard) {
+    return [arboard isMemberOfClass:[MSArtboardGroup class]];
+}
+
+function chooseDirectory() {
+    
+    // Configuring save panel
+    var openPanel = NSOpenPanel.openPanel()
+    openPanel.canChooseFiles = false
+    openPanel.canChooseDirectories = true
+    
+    // Launching panel
+    var result = openPanel.runModal()
+    if (result == NSFileHandlingPanelOKButton) {
+        return openPanel.URL().path()
+    }
+}
